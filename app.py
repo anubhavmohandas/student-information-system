@@ -32,6 +32,11 @@ def serialize_document(doc):
 def index():
     return send_from_directory('.', 'index.html')
 
+# Route to serve static files
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
+
 # API Routes
 @app.route('/api/students', methods=['GET'])
 def get_all_students():
