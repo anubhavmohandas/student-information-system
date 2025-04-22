@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder='static')
 CORS(app)  # Enable CORS for all routes
 
 # MongoDB Atlas connection string
@@ -30,7 +30,7 @@ def serialize_document(doc):
 # Route to serve the main HTML page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('.', 'index.html')
 
 # API Routes
 @app.route('/api/students', methods=['GET'])
