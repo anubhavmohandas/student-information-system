@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let studentToDelete = null;
     
     // API URL - update this to your Flask server URL when deployed
-    const API_URL = 'http://localhost:5000/api';
+    // const API_URL = 'http://localhost:5000/api';
+    const API_URL = 'https://anubhavmohandas.pythonanywhere.com/api';
     
     // Fetch all students when page loads
     fetchAllStudents();
