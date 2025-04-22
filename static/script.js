@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Keep track of the student ID to delete
     let studentToDelete = null;
     
-    // API URL - update this to your Flask server URL when deployed
-    // const API_URL = 'http://localhost:5000/api';
-    const API_URL = 'https://anubhavmohandas.pythonanywhere.com/api';
+    // API URL - Change to use relative URL based on current domain
+    // This will work both locally and when deployed
+    const API_URL = window.location.origin + '/api';
     
     // Fetch all students when page loads
     fetchAllStudents();
@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 renderStudentsList(data);
             })
-            .catch(error => console.error('Error fetching students:', error));
+            .catch(error => {
+                console.error('Error fetching students:', error);
+                studentsList.innerHTML = '<tr><td colspan="5" class="text-center">Error loading students. Please try again later.</td></tr>';
+            });
     }
     
     function renderStudentsList(students) {
@@ -101,13 +104,21 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             resetForm();
             fetchAllStudents();
             alert('Student added successfully!');
         })
-        .catch(error => console.error('Error creating student:', error));
+        .catch(error => {
+            console.error('Error creating student:', error);
+            alert('Failed to add student. Please try again.');
+        });
     }
     
     function updateStudent(id, data) {
@@ -118,31 +129,52 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             resetForm();
             fetchAllStudents();
             alert('Student updated successfully!');
         })
-        .catch(error => console.error('Error updating student:', error));
+        .catch(error => {
+            console.error('Error updating student:', error);
+            alert('Failed to update student. Please try again.');
+        });
     }
     
     function deleteStudent(id) {
         fetch(`${API_URL}/students/${id}`, {
             method: 'DELETE'
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             fetchAllStudents();
             alert('Student deleted successfully!');
         })
-        .catch(error => console.error('Error deleting student:', error));
+        .catch(error => {
+            console.error('Error deleting student:', error);
+            alert('Failed to delete student. Please try again.');
+        });
     }
     
     function editStudent(id) {
         // Fetch the student data
         fetch(`${API_URL}/students/${id}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(student => {
                 // Populate the form
                 formTitle.textContent = 'Edit Student';
@@ -158,7 +190,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Scroll to the form
                 document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
             })
-            .catch(error => console.error('Error fetching student:', error));
+            .catch(error => {
+                console.error('Error fetching student:', error);
+                alert('Failed to load student data. Please try again.');
+            });
     }
     
     function showDeleteConfirmation(id) {
