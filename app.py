@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__, static_folder='static')
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={r"/api/*": {"origins": ["https://anubhavmohandas.github.io"], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
 
 # MongoDB Atlas connection string
 MONGO_URI = os.environ.get('MONGO_URI')
