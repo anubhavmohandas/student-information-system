@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__, static_folder='static')
-CORS(app, resources={r"/api/*": {"origins": ["https://anubhavmohandas.github.io"], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
+CORS(app)  # Enable CORS for all routes
 
 # MongoDB Atlas connection string
 MONGO_URI = os.environ.get('MONGO_URI')
@@ -87,4 +87,5 @@ def delete_student(id):
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
